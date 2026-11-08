@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "version": "1.0.0",
+  "product": "pipmcp",
+  "credential": "PIPMCP_API_KEY",
+  "skills": [
+    {
+      "name": "pipmcp-circleci",
+      "description": "Connect AI agents to CircleCI using one PipMCP API key and actual hosted tool discovery."
+    }
+  ],
+  "files": {
+    "skills/pipmcp-circleci/SKILL.md": "332505cc64fc9161104b37564a24010df6b43f0cc6f8566e67ecbd9fce124282"
+  }
+}
