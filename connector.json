@@ -1,0 +1,265 @@
+{
+  "id": "circleci",
+  "appSlug": "circleci",
+  "name": "CircleCI",
+  "version": "0.2.0",
+  "baseUrl": "https://circleci.com/api/v2",
+  "auth": {
+    "type": "header",
+    "header": "Circle-Token",
+    "env": "CIRCLECI_TOKEN"
+  },
+  "tools": [
+    {
+      "name": "list_project_pipelines",
+      "description": "List project pipelines.",
+      "method": "GET",
+      "path": "/project/{vcs}/{owner}/{repo}/pipeline",
+      "readOnly": true,
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "vcs": {
+            "type": "string",
+            "enum": [
+              "gh",
+              "bb"
+            ]
+          },
+          "owner": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048,
+            "description": "Value"
+          },
+          "repo": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048,
+            "description": "Value"
+          },
+          "page_token": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048,
+            "description": "Value"
+          }
+        },
+        "required": [
+          "vcs",
+          "owner",
+          "repo"
+        ],
+        "additionalProperties": false
+      },
+      "bindings": {
+        "path": [
+          "vcs",
+          "owner",
+          "repo"
+        ],
+        "query": {
+          "page_token": "page-token"
+        },
+        "body": {}
+      },
+      "sampleArguments": {
+        "vcs": "gh",
+        "owner": "organization",
+        "repo": "repository"
+      },
+      "pagination": {
+        "type": "cursor",
+        "cursorInput": "page_token",
+        "nextCursorPath": "next_page_token"
+      },
+      "provenance": [
+        "https://circleci.com/docs/api/v2/"
+      ],
+      "approvalRequired": false,
+      "evidence": {
+        "providerLiveValidation": "not-run",
+        "localValidation": "provider-request-fixture"
+      }
+    },
+    {
+      "name": "list_pipeline_workflows",
+      "description": "List pipeline workflows.",
+      "method": "GET",
+      "path": "/pipeline/{pipeline_id}/workflow",
+      "readOnly": true,
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "pipeline_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048,
+            "description": "Value"
+          },
+          "page_token": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048,
+            "description": "Value"
+          }
+        },
+        "required": [
+          "pipeline_id"
+        ],
+        "additionalProperties": false
+      },
+      "bindings": {
+        "path": [
+          "pipeline_id"
+        ],
+        "query": {
+          "page_token": "page-token"
+        },
+        "body": {}
+      },
+      "sampleArguments": {
+        "pipeline_id": "00000000-0000-4000-8000-000000000001"
+      },
+      "pagination": {
+        "type": "cursor",
+        "cursorInput": "page_token",
+        "nextCursorPath": "next_page_token"
+      },
+      "provenance": [
+        "https://circleci.com/docs/api/v2/"
+      ],
+      "approvalRequired": false,
+      "evidence": {
+        "providerLiveValidation": "not-run",
+        "localValidation": "provider-request-fixture"
+      }
+    },
+    {
+      "name": "cancel_workflow",
+      "description": "Cancel workflow.",
+      "method": "POST",
+      "path": "/workflow/{workflow_id}/cancel",
+      "readOnly": false,
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "workflow_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048,
+            "description": "Value"
+          }
+        },
+        "required": [
+          "workflow_id"
+        ],
+        "additionalProperties": false
+      },
+      "bindings": {
+        "path": [
+          "workflow_id"
+        ],
+        "query": {},
+        "body": {}
+      },
+      "sampleArguments": {
+        "workflow_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "provenance": [
+        "https://circleci.com/docs/api/v2/"
+      ],
+      "approvalRequired": true,
+      "evidence": {
+        "providerLiveValidation": "not-run",
+        "localValidation": "provider-request-fixture"
+      }
+    }
+  ],
+  "workflow": {
+    "name": "Investigate pipelines then cancel a reviewed stuck workflow",
+    "description": "Investigate pipelines then cancel a reviewed stuck workflow. Read provider data first, then explicitly approve the selected change with operator write opt-in and a unique per-call approval key.",
+    "steps": [
+      "list_project_pipelines",
+      "list_pipeline_workflows",
+      "cancel_workflow"
+    ]
+  },
+  "provenance": [
+    "https://circleci.com/docs/api/v2/"
+  ],
+  "verification": "mock-only",
+  "providerLiveValidation": "not-run",
+  "capabilityEvidence": {
+    "local": {
+      "level": "Tested",
+      "operations": [
+        {
+          "name": "list_project_pipelines",
+          "level": "Tested",
+          "evidenceRefs": [
+            "Provider request/stdio contract tests"
+          ],
+          "method": "contract-fixture"
+        },
+        {
+          "name": "list_pipeline_workflows",
+          "level": "Tested",
+          "evidenceRefs": [
+            "Provider request/stdio contract tests"
+          ],
+          "method": "contract-fixture"
+        },
+        {
+          "name": "cancel_workflow",
+          "level": "Tested",
+          "evidenceRefs": [
+            "Provider request/stdio contract tests"
+          ],
+          "method": "contract-fixture"
+        }
+      ],
+      "evidenceRefs": [
+        "Provider request/stdio contract tests"
+      ],
+      "mode": "local"
+    },
+    "managed": {
+      "level": "Documented",
+      "operations": [
+        {
+          "name": "list_project_pipelines",
+          "level": "Documented",
+          "evidenceRefs": [],
+          "method": "documentation"
+        },
+        {
+          "name": "list_pipeline_workflows",
+          "level": "Documented",
+          "evidenceRefs": [],
+          "method": "documentation"
+        },
+        {
+          "name": "cancel_workflow",
+          "level": "Documented",
+          "evidenceRefs": [],
+          "method": "documentation"
+        }
+      ],
+      "evidenceRefs": [],
+      "mode": "managed"
+    }
+  },
+  "limitations": [
+    "API v2 remains supported. Project listing uses GitHub OAuth/Bitbucket Cloud gh/bb project slugs, not GitHub App definition-based projects."
+  ],
+  "repoId": "circleci-mcp",
+  "product": "pipmcp",
+  "artifactType": "connector",
+  "sourceRevision": "0c9ae1775fdd66bc7bc18e8c441ba811df1449d29eacc3b5b466d74fb98f57e0",
+  "managedAvailability": {
+    "status": "import-required",
+    "integration": "openapi-to-mcp",
+    "checkedAt": "2026-11-08T13:20:45.156456+00:00"
+  }
+}
